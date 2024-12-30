@@ -12,7 +12,7 @@ This project contains two Laravel artisan commands:
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/votre_nom_utilisateur/laravel-array-string-commands.git
+   git clone https://github.com/HarouneKESSAL/laravel-array-string-commands.git
     ```
 2. Install dependencies:
     ```bash
