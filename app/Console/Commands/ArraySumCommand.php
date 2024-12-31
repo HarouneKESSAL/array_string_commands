@@ -12,8 +12,6 @@ class ArraySumCommand extends Command
     public function handle()
     {
         $input = $this->argument('array');
-
-        // Decode input array
         $array = json_decode($input, true);
 
         if (is_null($array)) {
@@ -21,10 +19,14 @@ class ArraySumCommand extends Command
             return 1;
         }
 
-        // Recursive function to calculate the sum
-        $sum = $this->calculateSum($array);
+        try {
+            $sum = $this->calculateSum($array);
+            $this->info("The sum is: {$sum}");
+        } catch (\InvalidArgumentException $e) {
+            $this->error($e->getMessage());
+            return 1;
+        }
 
-        $this->info("The sum is: {$sum}");
         return 0;
     }
 
@@ -35,11 +37,15 @@ class ArraySumCommand extends Command
         foreach ($array as $item) {
             if (is_array($item)) {
                 $sum += $this->calculateSum($item);
-            } else {
+            } elseif (is_numeric($item)) {
                 $sum += $item;
+            } else {
+                throw new \InvalidArgumentException("Invalid element detected: {$item}. Only numeric values are allowed.");
             }
         }
 
         return $sum;
     }
+
+
 }

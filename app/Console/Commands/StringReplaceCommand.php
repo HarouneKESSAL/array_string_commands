@@ -14,12 +14,21 @@ class StringReplaceCommand extends Command
         $template = $this->argument('template');
         $args = $this->argument('args');
 
+        preg_match_all('/\{(\d+)\}/', $template, $matches);
+
+        foreach ($matches[1] as $index) {
+            if (!isset($args[$index])) {
+                $this->error("Missing argument for placeholder {{$index}}.");
+                return 1;
+            }
+        }
+
         $result = preg_replace_callback('/\{(\d+)\}/', function ($matches) use ($args) {
-            $index = $matches[1];
-            return $args[$index] ?? $matches[0];
+            return $args[$matches[1]];
         }, $template);
 
         $this->info("Result: {$result}");
         return 0;
     }
+
 }
